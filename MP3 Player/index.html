@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP3 Player</title>
+<style>
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  margin: 0;
+  background-color: #f0f0f0; /* Optional background color */
+}
+
+#music-player {
+  width: 300px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white; /* Optional background color for the player */
+}
+
+#song-info {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#controls button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #0073aa;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#controls button:hover {
+  background-color: #005f8d;
+}
+
+
+
+</style>
+</head>
+<body>
+    <div id="music-player">
+        <div id="song-info">Select a song to play</div>
+        <audio id="audio" controls></audio>
+        <div id="controls">
+          <button id="prev-button">Previous</button>
+          <button id="play-button">Play</button>
+          <button id="next-button">Next</button>
+        </div>
+      </div>
+      
+<script>
+
+class MusicPlayer {
+  constructor(audioElement, songInfoElement) {
+    this.audioElement = audioElement;
+    this.songInfoElement = songInfoElement;
+    this.songs = [
+      { title: "Hawaii Five-O", src: "Hawaii Five-O.mp3" },
+      { title: "Pipeline", src: "Pipeline.mp3" },
+      { title: "Miserlou", src: "Miserlou.mp3" }
+    ];
+    this.currentSongIndex = 0;
+
+    // Initialize event listeners
+    document.getElementById("play-button").addEventListener("click", () => this.togglePlay());
+    document.getElementById("prev-button").addEventListener("click", () => this.playPrevious());
+    document.getElementById("next-button").addEventListener("click", () => this.playNext());
+
+    // Load the first song
+    this.loadSong();
+  }
+
+  loadSong() {
+    const song = this.songs[this.currentSongIndex];
+    this.audioElement.src = song.src;
+    this.songInfoElement.textContent = `Playing: ${song.title}`;
+  }
+
+  playSong() {
+    this.audioElement.play();
+  }
+
+  pauseSong() {
+    this.audioElement.pause();
+  }
+
+  togglePlay() {
+    if (this.audioElement.paused) {
+      this.playSong();
+      document.getElementById("play-button").textContent = "Pause";
+    } else {
+      this.pauseSong();
+      document.getElementById("play-button").textContent = "Play";
+    }
+  }
+
+  playNext() {
+    this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
+    this.loadSong();
+    this.playSong();
+  }
+
+  playPrevious() {
+    this.currentSongIndex = (this.currentSongIndex - 1 + this.songs.length) % this.songs.length;
+    this.loadSong();
+    this.playSong();
+  }
+}
+
+// Initialize the MusicPlayer when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const audioElement = document.getElementById("audio");
+  const songInfoElement = document.getElementById("song-info");
+  new MusicPlayer(audioElement, songInfoElement);
+});
+
+</script>   
+</body>
+</html>
